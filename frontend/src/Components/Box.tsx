@@ -3,7 +3,7 @@ interface BoxProps {
 }
 
 function Box(props: BoxProps) {
-  return <div className="p-8 shadow-md">{props.children}</div>;
+  return <div className="p-6 shadow-md">{props.children}</div>;
 }
 
 export default Box;

@@ -48,7 +48,7 @@ function Goalies() {
   return (
     <>
       <Navbar />
-      <div className="grid grid-cols-3 grid-rows-3 gap-4 mt-8 mx-4">
+      <div className="grid grid-cols-2 grid-rows-2 gap-2 mt-8 mx-4 max-w-screen">
         <Leaderboard
           title="Wins Leaderboard"
           metric="Wins"

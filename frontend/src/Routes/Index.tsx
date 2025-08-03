@@ -1,3 +1,4 @@
+import Footer from "../Components/Footer";
 import Hero from "../Components/Hero";
 import Navbar from "../Components/Navbar";
 
@@ -6,6 +7,7 @@ function Index() {
     <>
       <Navbar></Navbar>
       <Hero></Hero>
+      <Footer />
     </>
   );
 }
