@@ -27,7 +27,7 @@ function Leaderboard(props: LeaderboardProps) {
     <>
       <Box>
         <h1 className="text-3xl">{props.title}</h1>
-        <div className="relative overflow-x-auto">
+        <div className="relative overflow-x-auto pt-3">
           <table className="w-full text-sm text-left">
             <thead>
               <tr>
@@ -58,7 +58,11 @@ function Leaderboard(props: LeaderboardProps) {
                       </p>
                     </td>
                     <td>
-                      <p className="text-xl font-bold">{value.value}</p>
+                      <p className="text-xl font-bold">
+                        {props.metric == "SV%"
+                          ? String(value.value.toFixed(3)).substring(1) + "%"
+                          : value.value}
+                      </p>
                     </td>
                   </tr>
                 );

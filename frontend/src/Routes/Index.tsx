@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import Box from "../Components/Box";
 import type { LeaderboardGoalie } from "../Components/Leaderboard";
 import Leaderboard from "../Components/Leaderboard";
 import Navbar from "../Components/Navbar";
 
 function Index() {
   const [winsLeaderboard, setWinsLeaderboard] = useState(
+    new Array<LeaderboardGoalie>()
+  );
+
+  const [svPctgLeaderboard, setSvPctgLeaderboard] = useState(
     new Array<LeaderboardGoalie>()
   );
 
@@ -18,7 +21,16 @@ function Index() {
       setWinsLeaderboard(json);
     };
 
+    const fetchSvPctgLeaderboard = async () => {
+      const response = await fetch("/api/leaderboard/svpct");
+
+      const json = await response.json();
+
+      setSvPctgLeaderboard(json);
+    };
+
     fetchWinsLeaderboard().catch(console.error);
+    fetchSvPctgLeaderboard().catch(console.error);
   }, []);
 
   return (
@@ -30,12 +42,11 @@ function Index() {
           metric="Wins"
           leaderboard={winsLeaderboard}
         />
-        <Box>
-          <h1 className="text-3xl">SV% Leaderboard</h1>
-        </Box>
-        <Box>
-          <h1 className="text-3xl">GAA Average Leaderboard</h1>
-        </Box>
+        <Leaderboard
+          title="SV% Leaderboard"
+          metric="SV%"
+          leaderboard={svPctgLeaderboard}
+        />
       </div>
     </>
   );
