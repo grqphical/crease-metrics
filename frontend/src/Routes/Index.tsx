@@ -19,7 +19,7 @@ function Index() {
     };
 
     fetchWinsLeaderboard().catch(console.error);
-  });
+  }, []);
 
   return (
     <>

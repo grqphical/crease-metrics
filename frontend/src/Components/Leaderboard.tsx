@@ -1,4 +1,5 @@
 import Box from "./Box";
+import Icon from "./Icon";
 
 export interface Name {
   default: string;
@@ -29,15 +30,17 @@ function Leaderboard(props: LeaderboardProps) {
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left">
             <thead>
-              <th></th>
-              <th></th>
-              <th>Name</th>
-              <th>{props.metric}</th>
+              <tr>
+                <th></th>
+                <th></th>
+                <th>Name</th>
+                <th>{props.metric}</th>
+              </tr>
             </thead>
             <tbody>
               {props.leaderboard.map((value, index) => {
                 return (
-                  <tr>
+                  <tr key={index}>
                     <td>
                       <img
                         src={value.headshot}
@@ -46,7 +49,9 @@ function Leaderboard(props: LeaderboardProps) {
                       />
                     </td>
 
-                    <td className="text-xl">{index + 1}.</td>
+                    <td className="text-xl">
+                      <Icon team={value.teamAbbrev} />
+                    </td>
                     <td>
                       <p className="text-xl">
                         {value.firstName.default} {value.lastName.default}
