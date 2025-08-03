@@ -4,11 +4,13 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import "./index.css";
 import Goalies from "./Routes/Goalies";
 import Index from "./Routes/Index";
+import NotFound from "./Routes/NotFound";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
+        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Index />} />
         <Route path="/goalies" element={<Goalies />} />
       </Routes>
