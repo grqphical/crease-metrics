@@ -12,6 +12,10 @@ function Index() {
     new Array<LeaderboardGoalie>()
   );
 
+  const [gaaLeaderboard, setGaaLeaderboard] = useState(
+    new Array<LeaderboardGoalie>()
+  );
+
   useEffect(() => {
     const fetchWinsLeaderboard = async () => {
       const response = await fetch("/api/leaderboard/wins");
@@ -29,8 +33,17 @@ function Index() {
       setSvPctgLeaderboard(json);
     };
 
+    const fetchGaaLeaderboard = async () => {
+      const response = await fetch("/api/leaderboard/gaa");
+
+      const json = await response.json();
+
+      setGaaLeaderboard(json);
+    };
+
     fetchWinsLeaderboard().catch(console.error);
     fetchSvPctgLeaderboard().catch(console.error);
+    fetchGaaLeaderboard().catch(console.error);
   }, []);
 
   return (
@@ -43,9 +56,14 @@ function Index() {
           leaderboard={winsLeaderboard}
         />
         <Leaderboard
-          title="SV% Leaderboard"
+          title="Save% Leaderboard"
           metric="SV%"
           leaderboard={svPctgLeaderboard}
+        />
+        <Leaderboard
+          title="GAA Leaderboard"
+          metric="GAA"
+          leaderboard={gaaLeaderboard}
         />
       </div>
     </>

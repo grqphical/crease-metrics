@@ -37,7 +37,7 @@ async def wins_leaderboard():
 
 
 @api_router.get("/leaderboard/svpct", response_model=List[LeaderboardGoalie])
-async def wins_leaderboard():
+async def save_percentage_leaderboard():
     async with aiohttp.ClientSession() as session:
         async with session.get(
             "https://api-web.nhle.com/v1/goalie-stats-leaders/current?limit=5"
@@ -45,6 +45,20 @@ async def wins_leaderboard():
             json_data = await response.json()
 
             leaderboard = [LeaderboardGoalie(**item) for item in json_data["savePctg"]]
+            return leaderboard
+
+
+@api_router.get("/leaderboard/gaa", response_model=List[LeaderboardGoalie])
+async def goals_against_average_leaderboard():
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            "https://api-web.nhle.com/v1/goalie-stats-leaders/current?limit=5"
+        ) as response:
+            json_data = await response.json()
+
+            leaderboard = [
+                LeaderboardGoalie(**item) for item in json_data["goalsAgainstAverage"]
+            ]
             return leaderboard
 
 

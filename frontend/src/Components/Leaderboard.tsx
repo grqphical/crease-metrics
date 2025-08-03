@@ -23,6 +23,17 @@ interface LeaderboardProps {
 }
 
 function Leaderboard(props: LeaderboardProps) {
+  const renderValue = (value: number) => {
+    switch (props.metric) {
+      case "SV%":
+        return String(value.toFixed(3)).substring(1) + "%";
+      case "GAA":
+        return value.toFixed(2);
+      default:
+        return value;
+    }
+  };
+
   return (
     <>
       <Box>
@@ -59,9 +70,7 @@ function Leaderboard(props: LeaderboardProps) {
                     </td>
                     <td>
                       <p className="text-xl font-bold">
-                        {props.metric == "SV%"
-                          ? String(value.value.toFixed(3)).substring(1) + "%"
-                          : value.value}
+                        {renderValue(value.value)}
                       </p>
                     </td>
                   </tr>
