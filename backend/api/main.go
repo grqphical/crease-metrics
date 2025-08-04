@@ -14,15 +14,18 @@ import (
 
 var ErrInvalidCache error = errors.New("nothing in cache")
 
+// represents leaderboard data stored in the cache
 type LeaderboardCacheItem struct {
 	CreationTimestamp int64 `json:"creationTimestamp"`
 	Data              any   `json:"data"`
 }
 
+// used to access the database among Gin routes
 type APIState struct {
 	db *bbolt.DB
 }
 
+// creates a new handler to retrieve NHL goaltender leader data with a given key
 func CreateProxyHandler(key string) func(*gin.Context) {
 	return func(c *gin.Context) {
 		state, _ := c.Get("appState")
