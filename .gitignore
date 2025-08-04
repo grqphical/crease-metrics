@@ -2,5 +2,6 @@ venv
 data/
 *.pkl
 *.pyc
+*.db
 .env
 tmp
