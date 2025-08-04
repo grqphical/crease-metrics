@@ -6,12 +6,18 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.etcd.io/bbolt"
 )
 
-var ErrNothingInCache error = errors.New("nothing in cache")
+var ErrInvalidCache error = errors.New("nothing in cache")
+
+type LeaderboardCacheItem struct {
+	CreationTimestamp int64 `json:"creationTimestamp"`
+	Data              any   `json:"data"`
+}
 
 type APIState struct {
 	db *bbolt.DB
@@ -26,19 +32,37 @@ func CreateProxyHandler(key string) func(*gin.Context) {
 			b := tx.Bucket([]byte("cache"))
 
 			if b == nil {
-				return ErrNothingInCache
+				return ErrInvalidCache
 			}
 
 			data := b.Get([]byte(key))
 			if data == nil {
-				return ErrNothingInCache
+				return ErrInvalidCache
 			}
 
-			c.Data(http.StatusOK, "application/json", data)
+			var cacheItem LeaderboardCacheItem
+			err := json.Unmarshal(data, &cacheItem)
+			if err != nil {
+				log.Printf("error while loading JSON from cache: %s\n", err)
+				return ErrInvalidCache
+			}
+
+			// if this cache item is older than 24 hours, delete it so we can repopulate it
+			if time.Unix(int64(cacheItem.CreationTimestamp), 0).After(time.Now()) {
+				b.Delete([]byte(key))
+				return ErrInvalidCache
+			}
+
+			encodedLeaderboardData, err := json.Marshal(cacheItem.Data)
+			if err != nil {
+				return ErrInvalidCache
+			}
+
+			c.Data(http.StatusOK, "application/json", encodedLeaderboardData)
 			return nil
 		})
 
-		if err == ErrNothingInCache {
+		if err == ErrInvalidCache {
 			resp, err := http.DefaultClient.Get("https://api-web.nhle.com/v1/goalie-stats-leaders/current?limit=5")
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -53,13 +77,19 @@ func CreateProxyHandler(key string) func(*gin.Context) {
 			}
 
 			c.JSON(http.StatusOK, data[key])
+
+			cacheItem := LeaderboardCacheItem{
+				CreationTimestamp: time.Now().Unix(),
+				Data:              data[key],
+			}
+
 			err = db.Update(func(tx *bbolt.Tx) error {
 				b, err := tx.CreateBucketIfNotExists([]byte("cache"))
 				if err != nil {
 					return err
 				}
 
-				jsonData, err := json.Marshal(data[key])
+				jsonData, err := json.Marshal(cacheItem)
 				if err != nil {
 					return err
 				}
