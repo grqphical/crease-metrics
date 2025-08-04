@@ -1,7 +1,7 @@
 [build]
 bin = "./backend/api/tmp/main.exe"
 cmd = "go build -C backend/api -o ./tmp/main.exe ."
-include_dir = ["backend/api"]
+include_dir = ["backend/api", "backend"]
 log = "stdout"
 
 [run]
