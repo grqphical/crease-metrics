@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import Box from "./Box";
 import Icon from "./Icon";
 import Loader from "./Loader";
@@ -35,6 +36,8 @@ function Leaderboard(props: LeaderboardProps) {
     }
   };
 
+  let navigate = useNavigate();
+
   const renderTable = () => {
     return (
       <table className="w-full text-sm text-left">
@@ -49,7 +52,13 @@ function Leaderboard(props: LeaderboardProps) {
         <tbody>
           {props.leaderboard.map((value, index) => {
             return (
-              <tr key={index}>
+              <tr
+                key={index}
+                className="hover:bg-slate-200 transition-all duration-200 ease-in-out cursor-pointer"
+                onClick={() => {
+                  navigate("/goalies/" + value.id);
+                }}
+              >
                 <td>
                   <img
                     src={value.headshot}
