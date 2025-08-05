@@ -88,12 +88,6 @@ export default function IndividualStats() {
               classes="w-20 h-20"
             />{" "}
             #{stats.sweaterNumber}
-            {" - "}
-            {stats.careerTotals.regularSeason.gamesStarted /
-              stats.careerTotals.regularSeason.gamesStarted >=
-            0.5
-              ? "Starter"
-              : ""}
           </p>
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
