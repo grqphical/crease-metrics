@@ -8,6 +8,19 @@ interface DefaultString {
   default: string;
 }
 
+interface CareerTotals {
+  regularSeason: {
+    gamesPlayed: number;
+    gamesStarted: number;
+    goalsAgainstAvg: number;
+    losses: number;
+    otLosses: number;
+    savePctg: number;
+    shutouts: number;
+    wins: number;
+  };
+}
+
 interface GoalieStats {
   firstName: DefaultString;
   lastName: DefaultString;
@@ -21,6 +34,7 @@ interface GoalieStats {
   birthCity: DefaultString;
   birthStateProvince: DefaultString;
   birthCountry: string;
+  careerTotals: CareerTotals;
 }
 
 export default function IndividualStats() {
@@ -65,17 +79,53 @@ export default function IndividualStats() {
           </p>
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
-          <Box class="bg-white text-black rounded-2xl aspect-square h-2/3 text-center">
-            <p className="text-2xl font-bold">.911%</p>
-            <p className="text-lg">SV%</p>
-          </Box>
-          <Box class="bg-white text-black rounded-2xl aspect-square h-2/3 text-center">
-            <p className="text-2xl font-bold">.911%</p>
-            <p className="text-lg">SV%</p>
-          </Box>
-          <Box class="bg-white text-black rounded-2xl aspect-square h-2/3 text-center">
-            <p className="text-2xl font-bold">.911%</p>
-            <p className="text-lg">SV%</p>
+          <Box class="bg-white text-black rounded-2xl flex flex-col gap-2">
+            <p className="text-2xl font-bold">Career Stats:</p>
+            <div className="flex flex-row gap-8">
+              <div>
+                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.gamesPlayed}`}</p>
+                <p className="text-md">Games Played</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.gamesStarted}`}</p>
+                <p className="text-md">Games Started</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.wins}-${stats.careerTotals.regularSeason.losses}-${stats.careerTotals.regularSeason.otLosses}`}</p>
+                <p className="text-md">All Time Record</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {String(
+                    stats.careerTotals.regularSeason.savePctg.toFixed(3)
+                  ).substring(1) + "%"}
+                </p>
+                <p className="text-md">SV%</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {(
+                    (stats.careerTotals.regularSeason.wins /
+                      stats.careerTotals.regularSeason.gamesPlayed) *
+                    100
+                  ).toFixed(1)}
+                  %
+                </p>
+                <p className="text-md">Win%</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {stats.careerTotals.regularSeason.goalsAgainstAvg.toFixed(2)}
+                </p>
+                <p className="text-md">GAA</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">
+                  {stats.careerTotals.regularSeason.shutouts}
+                </p>
+                <p className="text-md">Shutouts</p>
+              </div>
+            </div>
           </Box>
         </div>
       </div>
