@@ -9,6 +9,14 @@ interface DefaultString {
   default: string;
 }
 
+interface DraftDetails {
+  year: number;
+  teamAbbrev: string;
+  round: number;
+  pickInRound: number;
+  overallPick: 45;
+}
+
 interface CareerTotals {
   regularSeason: {
     gamesPlayed: number;
@@ -36,6 +44,7 @@ interface GoalieStats {
   birthStateProvince: DefaultString;
   birthCountry: string;
   careerTotals: CareerTotals;
+  draftDetails: DraftDetails;
 }
 
 export default function IndividualStats() {
@@ -65,6 +74,28 @@ export default function IndividualStats() {
     );
   }
 
+  const renderDraftDetails = () => {
+    if (stats.draftDetails === undefined) {
+      return <p>Undrafted</p>;
+    } else {
+      return (
+        <div className="flex flex-row items-center">
+          <p>
+            Drafted: {stats.draftDetails.year}, Round {stats.draftDetails.round}
+            , Pick #{stats.draftDetails.pickInRound} (#
+            {stats.draftDetails.overallPick} Overall) by{" "}
+          </p>
+
+          <Icon
+            teamAbbrev={stats.draftDetails.teamAbbrev}
+            teamFullName=""
+            classes="w-8 h-8"
+          />
+        </div>
+      );
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -89,6 +120,7 @@ export default function IndividualStats() {
             />{" "}
             #{stats.sweaterNumber}
           </p>
+          {renderDraftDetails()}
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
           <Box class="bg-white text-black rounded-2xl flex flex-col gap-2">
