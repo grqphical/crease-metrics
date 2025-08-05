@@ -38,6 +38,7 @@ func main() {
 	api.GET("/leaderboard/wins", CreateLeaderboardProxyHandler("wins"))
 	api.GET("/leaderboard/svpct", CreateLeaderboardProxyHandler("savePctg"))
 	api.GET("/leaderboard/gaa", CreateLeaderboardProxyHandler("goalsAgainstAverage"))
+	api.GET("/stats/:id", IndividualStatsHandler)
 
 	fmt.Println("API running on 127.0.0.1:8000")
 	router.Run("127.0.0.1:8000")

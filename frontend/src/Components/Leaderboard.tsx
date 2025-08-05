@@ -3,19 +3,20 @@ import Box from "./Box";
 import Icon from "./Icon";
 import Loader from "./Loader";
 
-export interface Name {
+export interface DefaultString {
   default: string;
 }
 
 export interface LeaderboardGoalie {
   id: number;
-  firstName: Name;
-  lastName: Name;
+  firstName: DefaultString;
+  lastName: DefaultString;
   sweaterNumber: number;
   headshot: string;
   teamAbbrev: string;
   teamLogo: string;
   value: number;
+  teamName: DefaultString;
 }
 
 interface LeaderboardProps {
@@ -45,7 +46,7 @@ function Leaderboard(props: LeaderboardProps) {
           <tr>
             <th></th>
             <th></th>
-            <th>Name</th>
+            <th>DefaultString</th>
             <th>{props.metric}</th>
           </tr>
         </thead>
@@ -68,7 +69,11 @@ function Leaderboard(props: LeaderboardProps) {
                 </td>
 
                 <td className="text-xl">
-                  <Icon team={value.teamAbbrev} />
+                  <Icon
+                    teamAbbrev={value.teamAbbrev}
+                    teamFullName={value.teamName.default}
+                    classes="w-16 h-16"
+                  />
                 </td>
                 <td>
                   <p className="text-xl">
@@ -90,7 +95,7 @@ function Leaderboard(props: LeaderboardProps) {
 
   return (
     <>
-      <Box>
+      <Box class="bg-white">
         <h1 className="text-3xl">{props.title}</h1>
         <div className="relative overflow-x-auto pt-3">
           {props.leaderboard.length === 0 ? <Loader /> : renderTable()}
