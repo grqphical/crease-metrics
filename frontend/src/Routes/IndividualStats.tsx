@@ -105,7 +105,7 @@ export default function IndividualStats() {
           alt=""
           className="w-48 h-48 rounded-full bg-gray-900"
         />
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           <h1 className="text-4xl font-bold">
             {stats.firstName && stats.firstName.default
               ? stats.firstName.default
@@ -121,6 +121,12 @@ export default function IndividualStats() {
             #{stats.sweaterNumber}
           </p>
           {renderDraftDetails()}
+          <p>
+            Born: {stats.birthCity.default}
+            {stats.birthStateProvince &&
+              `, ${stats.birthStateProvince.default}`}
+            , {stats.birthCountry}
+          </p>
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
           <Box class="bg-white text-black rounded-2xl flex flex-col gap-2">
