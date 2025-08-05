@@ -4,10 +4,10 @@ function Hero() {
   return (
     <>
       <section className="bg-gray-900 text-white flex items-center justify-center px-6 grow">
-        <div className="max-w-2xl text-center">
+        <div className="max-w-3xl text-center">
           <h1 className="text-5xl font-bold mb-4">
-            NHL Goaltending Analytics{" "}
-            <span className="text-blue-600">No other BS</span>
+            NHL Statistics and Analytics{" "}
+            <p className="text-blue-600">Focused Solely on Goaltending</p>
           </h1>
           <p className="text-lg mb-6 text-gray-300"></p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
