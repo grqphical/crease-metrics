@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Box from "../Components/Box";
 import Icon from "../Components/Icon";
+import Loader from "../Components/Loader";
 import Navbar from "../Components/Navbar";
 
 interface DefaultString {
@@ -53,6 +54,17 @@ export default function IndividualStats() {
     fetchStats().catch(console.error);
   }, []);
 
+  if (Object.keys(stats).length === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="flex justify-center items-center h-screen">
+          <Loader />
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <Navbar />
@@ -76,6 +88,12 @@ export default function IndividualStats() {
               classes="w-20 h-20"
             />{" "}
             #{stats.sweaterNumber}
+            {" - "}
+            {stats.careerTotals.regularSeason.gamesStarted /
+              stats.careerTotals.regularSeason.gamesStarted >=
+            0.5
+              ? "Starter"
+              : ""}
           </p>
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
