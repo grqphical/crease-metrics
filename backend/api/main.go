@@ -14,7 +14,7 @@ type APIState struct {
 }
 
 func main() {
-	db, err := bbolt.Open("cache.db", 0600, nil)
+	db, err := bbolt.Open("cache.db", 0o600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,6 +40,6 @@ func main() {
 	api.GET("/leaderboard/gaa", CreateLeaderboardProxyHandler("goalsAgainstAverage"))
 	api.GET("/stats/:id", IndividualStatsHandler)
 
-	fmt.Println("API running on 127.0.0.1:8000")
-	router.Run("127.0.0.1:8000")
+	fmt.Println("API running on :8000")
+	router.Run(":8000")
 }
