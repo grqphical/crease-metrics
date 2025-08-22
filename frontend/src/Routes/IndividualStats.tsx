@@ -33,6 +33,26 @@ interface CareerTotals {
   playoffs: CareerStats
 }
 
+interface SeasonStats {
+  gameTypeId: number
+  gamesPlayed: number;
+  gamesStarted: number;
+  goalsAgainstAvg: number;
+  losses: number;
+  otLosses: number;
+  savePctg: number;
+  shutouts: number;
+  wins: number;
+  goalsAgainst: number
+  pim: number
+  leagueAbbrev: string
+  season: number
+  teamName: DefaultString
+  timeOnIce: number
+  assists: number
+  goals: number
+}
+
 interface GoalieStats {
   firstName: DefaultString;
   lastName: DefaultString;
@@ -48,6 +68,7 @@ interface GoalieStats {
   birthCountry: string;
   careerTotals: CareerTotals;
   draftDetails: DraftDetails;
+  seasonTotals: Array<SeasonStats>
 }
 
 export default function IndividualStats() {
@@ -56,7 +77,8 @@ export default function IndividualStats() {
 
   const [stats, setState] = useState({} as GoalieStats);
 
-  const [showCareerPlayoffStats, setShowCareerPlayoffState] = useState(false)
+  const [showCareerPlayoffStats, setShowCareerPlayoffStats] = useState(false)
+  const [showSeasonPlayoffStats, setShowSeasonPlayoffStats] = useState(false)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -135,16 +157,16 @@ export default function IndividualStats() {
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
           <Box class="bg-white text-black rounded-2xl flex flex-col">
-            <p className="text-2xl font-bold mb-2">Career Stats:</p>
+            <p className="text-2xl font-bold mb-2">Career Totals</p>
             <div className="flex flex-row">
               <button className={showCareerPlayoffStats ?
                 "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tl-md" :
                 "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tl-md"
-              } onClick={() => setShowCareerPlayoffState(false)}>Regular Season</button>
+              } onClick={() => setShowCareerPlayoffStats(false)}>Regular Season</button>
               <button className={showCareerPlayoffStats ?
                 "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tr-md" :
                 "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tr-md"
-              } onClick={() => setShowCareerPlayoffState(true)}>Playoffs</button>
+              } onClick={() => setShowCareerPlayoffStats(true)}>Playoffs</button>
             </div>
             <div className="flex flex-row gap-8 bg-gray-100 p-2 rounded-b-md rounded-tr-md">
               <div>
@@ -201,6 +223,77 @@ export default function IndividualStats() {
             </div>
           </Box>
         </div>
+
+      </div>
+      <div className="p-4 w-19/20 m-auto">
+        <h1 className="text-2xl">Career Stats</h1>
+        <div className="flex flex-row">
+          <button className={showSeasonPlayoffStats ?
+            "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tl-md" :
+            "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tl-md"
+          } onClick={() => setShowSeasonPlayoffStats(false)}>Regular Season</button>
+          <button className={showSeasonPlayoffStats ?
+            "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tr-md" :
+            "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tr-md"
+          } onClick={() => setShowSeasonPlayoffStats(true)}>Playoffs</button>
+        </div>
+        <div className="bg-gray-100 relative overflow-x-auto rounded-b-md rounded-tr-md">
+          <table className="w-full rtl:text-right">
+            <thead className="bg-gray-200">
+              <tr>
+                <th>Season</th>
+                <th>Team</th>
+                <th>League</th>
+                <th>GP</th>
+                <th>SV%</th>
+                <th>GAA</th>
+                <th>GA</th>
+                <th>Shutouts</th>
+                <th>Record</th>
+                <th>Win%</th>
+                <th>PIM</th>
+                <th>Points</th>
+                <th>TOI</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                stats.seasonTotals.map((stats) => {
+                  const season = String(stats.season).slice(0, 4) + "-" + String(stats.season).slice(4, String(stats.season).length)
+
+                  if (!showSeasonPlayoffStats && stats.gameTypeId == 3) {
+                    return
+                  } else if (showSeasonPlayoffStats && stats.gameTypeId == 2) {
+                    return
+                  }
+
+                  return (
+                    <tr>
+                      <td className="px-1 py-4">{season}</td>
+                      <td className="px-1 py-4">{stats.teamName.default}</td>
+                      <td className="px-1 py-4">{stats.leagueAbbrev}</td>
+                      <td className="px-1 py-4">{stats.gamesPlayed}</td>
+                      <td className="px-1 py-4">{stats.savePctg ? (stats.savePctg.toFixed(3) + "%").substring(1) : ""}</td>
+                      <td className="px-1 py-4">{stats.goalsAgainstAvg ? stats.goalsAgainstAvg.toFixed(2) : "-"}</td>
+                      <td className="px-1 py-4">{stats.goalsAgainst ? stats.goalsAgainst : "-"}</td>
+                      <td className="px-1 py-4">{stats.shutouts ? stats.shutouts : "-"}</td>
+                      <td className="px-1 py-4">{stats.wins !== undefined && stats.losses !== undefined && stats.otLosses !== undefined ?
+                        `${stats.wins}-${stats.losses}-${stats.otLosses}`
+                        : "-"}
+                      </td>
+                      <td className="px-1 py-4">{stats.wins !== undefined && stats.gamesPlayed !== undefined ? (stats.wins / stats.gamesPlayed * 100).toFixed(1) + "%" : "-"}</td>
+                      <td className="px-1 py-4">{stats.pim ? stats.pim : "-"}</td>
+                      <td className="px-1 py-4">{stats.assists !== undefined || stats.goals !== undefined ? stats.assists + stats.goals : "0"}</td>
+                      <td className="px-1 py-4">{stats.timeOnIce ? stats.timeOnIce : "-"}</td>
+
+                    </tr>
+                  )
+                })
+              }
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </>
   );
