@@ -17,17 +17,20 @@ interface DraftDetails {
   overallPick: 45;
 }
 
+interface CareerStats {
+  gamesPlayed: number;
+  gamesStarted: number;
+  goalsAgainstAvg: number;
+  losses: number;
+  otLosses: number;
+  savePctg: number;
+  shutouts: number;
+  wins: number;
+}
+
 interface CareerTotals {
-  regularSeason: {
-    gamesPlayed: number;
-    gamesStarted: number;
-    goalsAgainstAvg: number;
-    losses: number;
-    otLosses: number;
-    savePctg: number;
-    shutouts: number;
-    wins: number;
-  };
+  regularSeason: CareerStats
+  playoffs: CareerStats
 }
 
 interface GoalieStats {
@@ -52,6 +55,8 @@ export default function IndividualStats() {
   const id = params.id;
 
   const [stats, setState] = useState({} as GoalieStats);
+
+  const [showCareerPlayoffStats, setShowCareerPlayoffState] = useState(false)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -129,49 +134,67 @@ export default function IndividualStats() {
           </p>
         </div>
         <div className="flex flex-row items-center gap-4 ml-auto">
-          <Box class="bg-white text-black rounded-2xl flex flex-col gap-2">
-            <p className="text-2xl font-bold">Career Stats:</p>
-            <div className="flex flex-row gap-8">
+          <Box class="bg-white text-black rounded-2xl flex flex-col">
+            <p className="text-2xl font-bold mb-2">Career Stats:</p>
+            <div className="flex flex-row">
+              <button className={showCareerPlayoffStats ?
+                "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tl-md" :
+                "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tl-md"
+              } onClick={() => setShowCareerPlayoffState(false)}>Regular Season</button>
+              <button className={showCareerPlayoffStats ?
+                "px-2 py-2 text-lg cursor-pointer bg-gray-100 border-b-2 border-blue-400 rounded-tr-md" :
+                "px-2 py-2 text-lg cursor-pointer bg-gray-300 rounded-tr-md"
+              } onClick={() => setShowCareerPlayoffState(true)}>Playoffs</button>
+            </div>
+            <div className="flex flex-row gap-8 bg-gray-100 p-2 rounded-b-md rounded-tr-md">
               <div>
-                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.gamesPlayed}`}</p>
+                <p className="text-2xl font-bold">{`${showCareerPlayoffStats ? stats.careerTotals.playoffs.gamesPlayed : stats.careerTotals.regularSeason.gamesPlayed}`}</p>
                 <p className="text-md">Games Played</p>
               </div>
               <div>
-                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.gamesStarted}`}</p>
+                <p className="text-2xl font-bold">{`${showCareerPlayoffStats ? stats.careerTotals.playoffs.gamesStarted : stats.careerTotals.regularSeason.gamesStarted}`}</p>
                 <p className="text-md">Games Started</p>
               </div>
               <div>
-                <p className="text-2xl font-bold">{`${stats.careerTotals.regularSeason.wins}-${stats.careerTotals.regularSeason.losses}-${stats.careerTotals.regularSeason.otLosses}`}</p>
+                <p className="text-2xl font-bold">{`${showCareerPlayoffStats ? stats.careerTotals.playoffs.wins : stats.careerTotals.regularSeason.wins}-${showCareerPlayoffStats ? stats.careerTotals.playoffs.losses : stats.careerTotals.regularSeason.losses}-${showCareerPlayoffStats ? stats.careerTotals.playoffs.otLosses : stats.careerTotals.regularSeason.otLosses}`}</p>
                 <p className="text-md">All Time Record</p>
               </div>
               <div>
                 <p className="text-2xl font-bold">
                   {String(
-                    stats.careerTotals.regularSeason.savePctg.toFixed(3)
+                    showCareerPlayoffStats ? stats.careerTotals.playoffs.savePctg.toFixed(3) : stats.careerTotals.regularSeason.savePctg.toFixed(3)
                   ).substring(1) + "%"}
                 </p>
                 <p className="text-md">SV%</p>
               </div>
               <div>
                 <p className="text-2xl font-bold">
-                  {(
-                    (stats.careerTotals.regularSeason.wins /
-                      stats.careerTotals.regularSeason.gamesPlayed) *
-                    100
-                  ).toFixed(1)}
+                  {
+                    showCareerPlayoffStats ?
+                      (
+                        (stats.careerTotals.playoffs.wins /
+                          stats.careerTotals.playoffs.gamesPlayed) *
+                        100
+                      ).toFixed(1) : (
+                        (stats.careerTotals.regularSeason.wins /
+                          stats.careerTotals.regularSeason.gamesPlayed) *
+                        100
+                      ).toFixed(1)
+
+                  }
                   %
                 </p>
                 <p className="text-md">Win%</p>
               </div>
               <div>
                 <p className="text-2xl font-bold">
-                  {stats.careerTotals.regularSeason.goalsAgainstAvg.toFixed(2)}
+                  {showCareerPlayoffStats ? stats.careerTotals.playoffs.goalsAgainstAvg.toFixed(2) : stats.careerTotals.regularSeason.goalsAgainstAvg.toFixed(2)}
                 </p>
                 <p className="text-md">GAA</p>
               </div>
               <div>
                 <p className="text-2xl font-bold">
-                  {stats.careerTotals.regularSeason.shutouts}
+                  {showCareerPlayoffStats ? stats.careerTotals.playoffs.shutouts : stats.careerTotals.regularSeason.shutouts}
                 </p>
                 <p className="text-md">Shutouts</p>
               </div>
