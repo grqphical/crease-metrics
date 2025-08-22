@@ -14,7 +14,7 @@ type APIState struct {
 }
 
 func main() {
-	db, err := bbolt.Open("cache.db", 0600, nil)
+	db, err := bbolt.Open("cache.db", 0o600, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,6 +38,7 @@ func main() {
 	api.GET("/leaderboard/wins", CreateLeaderboardProxyHandler("wins"))
 	api.GET("/leaderboard/svpct", CreateLeaderboardProxyHandler("savePctg"))
 	api.GET("/leaderboard/gaa", CreateLeaderboardProxyHandler("goalsAgainstAverage"))
+	api.GET("/leaderboard/shutouts", CreateLeaderboardProxyHandler("shutouts"))
 	api.GET("/stats/:id", IndividualStatsHandler)
 
 	fmt.Println("API running on 127.0.0.1:8000")

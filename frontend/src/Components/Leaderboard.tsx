@@ -46,7 +46,7 @@ function Leaderboard(props: LeaderboardProps) {
           <tr>
             <th></th>
             <th></th>
-            <th>DefaultString</th>
+            <th>Name</th>
             <th>{props.metric}</th>
           </tr>
         </thead>

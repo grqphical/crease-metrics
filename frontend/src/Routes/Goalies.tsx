@@ -15,6 +15,10 @@ function Goalies() {
     new Array<LeaderboardGoalie>()
   );
 
+  const [shutoutLeaderboard, setShutoutLeaderboard] = useState(
+    new Array<LeaderboardGoalie>()
+  );
+
   useEffect(() => {
     const fetchWinsLeaderboard = async () => {
       const response = await fetch("/api/leaderboard/wins");
@@ -40,9 +44,19 @@ function Goalies() {
       setGaaLeaderboard(json);
     };
 
+    const fetchShutoutLeaderboard = async () => {
+      const response = await fetch("/api/leaderboard/shutouts");
+
+      const json = await response.json();
+
+      setShutoutLeaderboard(json);
+
+    }
+
     fetchWinsLeaderboard().catch(console.error);
     fetchSvPctgLeaderboard().catch(console.error);
     fetchGaaLeaderboard().catch(console.error);
+    fetchShutoutLeaderboard().catch(console.error)
   }, []);
 
   return (
@@ -55,14 +69,19 @@ function Goalies() {
           leaderboard={winsLeaderboard}
         />
         <Leaderboard
-          title="Save% Leaderboard"
+          title="Save Percentage Leaderboard"
           metric="SV%"
           leaderboard={svPctgLeaderboard}
         />
         <Leaderboard
-          title="GAA Leaderboard"
+          title="Goals Against Average Leaderboard"
           metric="GAA"
           leaderboard={gaaLeaderboard}
+        />
+        <Leaderboard
+          title="Shutouts Leaderboard"
+          metric="Shutouts"
+          leaderboard={shutoutLeaderboard}
         />
       </div>
     </>
